@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:fresco="http://schemas.android.com/apk/res-auto"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:map="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+>
+    <data>
+
+        <variable name="viewModel" type="com.llm.ui.viewmodels.DetailViewModel"/>
+
+    </data>
+
+
+    <LinearLayout
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:weightSum="2"
+    >
+
+        <com.google.android.gms.maps.MapView
+                android:id="@+id/map_view"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                app:coordinates="@{viewModel.latLng}"
+                tools:context=".ui.DeliveryDetailActivity"
+                map:cameraZoom="15"
+                map:mapType="normal"
+                map:liteMode="true"
+                android:layout_weight="1"
+        />
+
+
+        <!--<include android:id="@+id/ll_detail"
+                 android:layout_width="match_parent"
+                 android:layout_height="wrap_content"
+                 android:layout_marginTop="@dimen/activity_vertical_margin"
+                 layout="@layout/delivery_list_item"
+        />-->
+        <LinearLayout android:id="@+id/ll_detail"
+                      android:orientation="horizontal"
+                      android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:layout_marginTop="@dimen/activity_vertical_margin">
+
+            <com.facebook.drawee.view.SimpleDraweeView
+                    android:id="@+id/iv"
+                    android:layout_width="@dimen/image_size"
+                    android:layout_height="@dimen/image_size"
+                    app:uri="@{viewModel.imageUrl}"
+                    fresco:placeholderImage="@drawable/place_holder"
+                    fresco:placeholderImageScaleType="centerCrop"/>
+
+            <TextView
+                    android:id="@+id/tv_desc"
+                    style="@style/custom_text.bold"
+                    android:padding="@dimen/padding_list_item_parent"
+                    android:text="@{viewModel.description}"
+
+            />
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+</layout>

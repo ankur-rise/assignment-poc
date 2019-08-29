@@ -1,0 +1,107 @@
+apply plugin: 'com.android.application'
+
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
+apply plugin: 'kotlin-android-extensions'
+
+
+android {
+    compileSdkVersion 28
+    defaultConfig {
+        applicationId "com.llm"
+        minSdkVersion 21
+        targetSdkVersion 28
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+    buildTypes {
+        release {
+            // Enables code shrinking, obfuscation, and optimization for only
+            // your project's release build type.
+            minifyEnabled true
+            // Enables resource shrinking, which is performed by the
+            // Android Gradle plugin.
+            shrinkResources true
+
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            buildConfigField "String", "BASE_URL", RELEASE_BASE_URL
+        }
+        debug{
+           /* debuggable true
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'*/
+            buildConfigField "String", "BASE_URL", DEBUG_BASE_URL
+        }
+
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    dataBinding {
+        enabled = true
+    }
+    androidExtensions {
+        experimental = true
+    }
+    useLibrary 'android.test.base'
+    useLibrary 'android.test.mock'
+}
+
+dependencies {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+
+    implementation 'androidx.appcompat:appcompat:1.0.2'
+    implementation 'androidx.core:core-ktx:1.2.0-alpha02'
+    implementation 'androidx.fragment:fragment-ktx:1.1.0-rc03'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0-beta01'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-savedstate:1.0.0-alpha02'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.0-RC2'
+    // for support widget like swipe to refresh
+    implementation 'androidx.legacy:legacy-support-core-ui'
+    // fresco image downloading and caching
+    implementation 'com.facebook.fresco:fresco:1.13.0'
+    // room db
+    implementation "androidx.room:room-runtime:$room_version"
+    implementation 'com.google.android.gms:play-services-maps:16.0.0'
+    kapt "androidx.room:room-compiler:$room_version"
+
+    //paging lib
+    implementation "androidx.paging:paging-runtime-ktx:$paging_version"
+    // alternatively - without Android dependencies for testing
+    testImplementation "androidx.paging:paging-common-ktx:$paging_version" // For Kotlin use paging-common-ktx
+
+
+    compileOnly("com.squareup.inject:assisted-inject-annotations-dagger2:0.3.3")
+    kapt("com.squareup.inject:assisted-inject-processor-dagger2:0.3.3")
+
+
+    //di
+    //dagger
+    implementation 'com.google.dagger:dagger:2.13'
+    implementation 'androidx.constraintlayout:constraintlayout:1.1.2'
+    kapt 'com.google.dagger:dagger-compiler:2.13'
+
+
+    // JSON Converter
+    implementation 'com.google.code.gson:gson:2.8.5'
+    implementation 'com.squareup.retrofit2:converter-gson:2.3.0'
+    implementation 'com.squareup.retrofit2:retrofit:2.4.0'
+    implementation 'com.squareup.okhttp3:logging-interceptor:3.10.0'
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0'
+
+    testImplementation 'junit:junit:4.12'
+    testImplementation 'android.arch.core:core-testing:1.1.1'
+    testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:2.1.0"
+    androidTestImplementation 'androidx.test:runner:1.3.0-alpha02'
+    androidTestImplementation 'com.android.support.test:rules:1.0.2'
+    androidTestImplementation "androidx.test.espresso:espresso-core:$espresso_version"
+    androidTestImplementation "androidx.test.espresso:espresso-intents:$espresso_version"
+    androidTestImplementation "androidx.test.espresso:espresso-contrib:$espresso_version"
+    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
+
+    implementation "androidx.test.espresso:espresso-idling-resource:$espresso_version"
+}
