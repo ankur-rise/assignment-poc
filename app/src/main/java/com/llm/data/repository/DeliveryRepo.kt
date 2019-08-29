@@ -22,16 +22,18 @@ import javax.inject.Singleton
 @Singleton
 open class DeliveryRepo @Inject constructor(
     @NotNull private val api: Apis,
-    private val db:AppDB,
+    private val db: AppDB,
     private val utils: Utils,
     @SingleThreadExecutor private val executor: Executor
 ) : IDeliveryRepo {
 
-
+    /**
+     * Prepare the result {RepoResult} which include the live data from data source and network state.
+     * * */
     override fun getDeliveryItems(): RepoResult {
         val dao = db.deliveryDao()
         val dataSourceFactory = dao.get()
-        val callback = CustomBoundaryCallback(dao, executor, :: getDeliveries)
+        val callback = CustomBoundaryCallback(dao, executor, ::getDeliveries)
         val networkErr = callback.networkState
 
         val pagedListConfig = PagedList.Config.Builder()
@@ -41,11 +43,14 @@ open class DeliveryRepo @Inject constructor(
             .build()
 
         val pagedList = LivePagedListBuilder(dataSourceFactory, pagedListConfig).setBoundaryCallback(callback).build()
-        return RepoResult(pagedList, networkErr, retry = {callback.retryFailedReq()})
+        return RepoResult(pagedList, networkErr, retry = { callback.retryFailedReq() })
     }
 
-
-    override fun refreshData( onError: (errMsg: String) -> Unit){
+    /**
+     *
+     * Refresh data call to reset the data. Fetch new data from start
+     * */
+    override fun refreshData(onError: (errMsg: String) -> Unit) {
         getDeliveries(
             0,
             NETWORK_PAGE_SIZE,
@@ -55,6 +60,7 @@ open class DeliveryRepo @Inject constructor(
             })
     }
 
+    /**Network call using retrofit to get data*/
     override fun getDeliveries(
         offset: Int,
         limit: Int,
@@ -76,10 +82,9 @@ open class DeliveryRepo @Inject constructor(
             ) {
                 if (response.isSuccessful) {
                     val dataDelivery: List<DeliveryItemDataModel>? = response.body()
-                    if(dataDelivery!=null) {
+                    if (dataDelivery != null) {
                         onSuccess(dataDelivery)
-                    }
-                    else{
+                    } else {
                         onError(utils.getString(R.string.empty_data))
                     }
 
@@ -101,13 +106,14 @@ open class DeliveryRepo @Inject constructor(
         })
     }
 
-    private fun getMessage(original:String?, alternate: String): String {
+    private fun getMessage(original: String?, alternate: String): String {
         var msg = original
-        if(msg==null || msg.isEmpty())
+        if (msg == null || msg.isEmpty())
             msg = alternate
         return msg
     }
 
+    /**Refresh database. Clear database then reinsert the new data in transaction*/
     private fun refreshDB(data: List<DeliveryItemDataModel>) {
         executor.execute {
             db.runInTransaction {

@@ -20,17 +20,19 @@ class DeliveryItemsViewModel @Inject constructor(private val deliveryRepo: Deliv
     }
 
 
-    val resultLiveData:LiveData<PagedList<DeliveryItemDataModel>> = Transformations.switchMap(repoResult){it.deliveryData}
-    val networkState:LiveData<NetworkState> = Transformations.switchMap(repoResult){it.networkState}
+    val resultLiveData: LiveData<PagedList<DeliveryItemDataModel>> =
+        Transformations.switchMap(repoResult) { it.deliveryData }
+    val networkState: LiveData<NetworkState> = Transformations.switchMap(repoResult) { it.networkState }
     fun loadDelivery() {
         deliveryData.postValue(Unit)
     }
 
 
     private var _errRefresh = MutableLiveData<String>()
-     val errRefreshLiveData:LiveData<String> = Transformations.map(_errRefresh){
-         it
-     }
+    val errRefreshLiveData: LiveData<String> = Transformations.map(_errRefresh) {
+        it
+    }
+
     fun refreshData() {
         deliveryRepo.refreshData(onError = {
 

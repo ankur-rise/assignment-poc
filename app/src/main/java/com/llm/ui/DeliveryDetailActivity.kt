@@ -19,7 +19,7 @@ class DeliveryDetailActivity : AppCompatActivity() {
     @Inject // cannot be private as dagger required this variable to access
     lateinit var factory: ViewModelFactory
 
-    private val viewModel: DetailViewModel by  viewModels { factory }
+    private val viewModel: DetailViewModel by viewModels { factory }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

@@ -15,7 +15,7 @@ class DetailViewModel @Inject constructor() : ViewModel() {
     val imageUrl: LiveData<String> = Transformations.map(_dataModel) {
         it.imageUrl
     }
-    val latLng:LiveData<LatLongDataModel> = Transformations.map(_dataModel){
+    val latLng: LiveData<LatLongDataModel> = Transformations.map(_dataModel) {
         it.location
     }
 
